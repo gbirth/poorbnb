@@ -4,8 +4,13 @@ import java.io.Serializable;
 import java.util.List;
 
 import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.Table;
+import javax.validation.constraints.NotEmpty;
 
 import lombok.Data;
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
 
 
 /**
@@ -28,13 +33,16 @@ public class Hotel implements Serializable {
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="SQ_ID_HOTEL")
 	@Column(name="ID_HOTEL")
 	private Long idHotel;
-	
+
+	@NotEmpty
 	@Column(name="ENDERECO")
 	private String endereco;
 
+	@NotEmpty
 	@Column(name="NOME_HOTEL")
 	private String nomeHotel;
 
+	@NotEmpty
 	@Column(name="TELEFONE")
 	private String telefone;
 
@@ -42,6 +50,7 @@ public class Hotel implements Serializable {
 	private String telefoneOpc;
 
 	//bi-directional many-to-one association to Usuario
+	@Cascade(CascadeType.ALL)
 	@ManyToOne
 	@JoinColumn(name="ID_PROPRIETARIO")
 	private Usuario usuario;
