@@ -25,8 +25,8 @@ public class ControllerHotel {
         return ResponseEntity.ok(this.hotelService.inserirHotel(hotel));
     }
 
-    @PutMapping("/realiava-cobranca")
-    public ResponseEntity<List<Hotel>> reavaliaCobrancaHotel() {
-        return ResponseEntity.ok(this.hotelService.reavaliaCobrancaHotel());
+    @PutMapping("/must-pay-more-or-less")
+    public ResponseEntity<List<Hotel>> verificarAvaliacoes() {
+        return ResponseEntity.ok(this.hotelService.verificarAvaliacao());
     }
 }

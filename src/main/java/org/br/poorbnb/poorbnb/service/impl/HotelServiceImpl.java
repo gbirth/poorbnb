@@ -40,7 +40,7 @@ public class HotelServiceImpl implements HotelService {
     }
 
     @Override
-    public List<Hotel> reavaliaCobrancaHotel() {
+    public List<Hotel> verificarAvaliacao() {
         final List<Hotel> hoteis = this.hotelRepository.findAll();
         final List<Hotel> reviwed = new ArrayList<>();
 
