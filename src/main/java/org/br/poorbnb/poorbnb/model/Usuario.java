@@ -4,6 +4,7 @@ import lombok.Data;
 
 import java.io.Serializable;
 import javax.persistence.*;
+import javax.validation.constraints.Max;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
@@ -24,10 +25,11 @@ public class Usuario implements Serializable {
 	@SequenceGenerator(name="SQ_ID_USUARIO", allocationSize = 1, sequenceName="SQ_ID_USUARIO")
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="SQ_ID_USUARIO")
 	@Column(name="ID_USUARIO")
-	private long idUsuario;
+	private Long idUsuario;
 
+	@Max(value = 15, message = "O valor máximo do campo é 15")
 	@Column(name="CPF_CNPJ")
-	private BigDecimal cpfCnpj;
+	private Long cpfCnpj;
 
 	@Temporal(TemporalType.DATE)
 	@Column(name="DT_NASC")

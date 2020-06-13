@@ -1,10 +1,15 @@
 package org.br.poorbnb.poorbnb.service;
 
-import org.br.poorbnb.poorbnb.dto.ResponseDTO;
 import org.br.poorbnb.poorbnb.model.Hotel;
+
+import java.util.List;
 
 
 public interface HotelService {
 
-    ResponseDTO insereHotel(Hotel hotel);
+    Hotel inserirHotel(Hotel hotel);
+
+    void removerHotel(Hotel hotel);
+
+    List<Hotel> reavaliaCobrancaHotel();
 }

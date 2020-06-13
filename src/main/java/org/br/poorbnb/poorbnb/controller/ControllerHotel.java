@@ -1,15 +1,13 @@
 package org.br.poorbnb.poorbnb.controller;
 
-import org.br.poorbnb.poorbnb.dto.ResponseDTO;
 import org.br.poorbnb.poorbnb.model.Hotel;
 import org.br.poorbnb.poorbnb.service.HotelService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 @RequestMapping("api/v1/hotel")
@@ -23,7 +21,12 @@ public class ControllerHotel {
     }
 
     @PostMapping
-    public ResponseDTO criarHotel(@Valid @RequestBody Hotel hotel) {
-        return this.hotelService.insereHotel(hotel);
+    public ResponseEntity<Hotel> criarHotel(@Valid @RequestBody Hotel hotel) {
+        return ResponseEntity.ok(this.hotelService.inserirHotel(hotel));
+    }
+
+    @PutMapping("/realiava-cobranca")
+    public ResponseEntity<List<Hotel>> reavaliaCobrancaHotel() {
+        return ResponseEntity.ok(this.hotelService.reavaliaCobrancaHotel());
     }
 }
