@@ -1,4 +1,4 @@
-package org.br.poorbnb.poorbnb.any.command;
+package org.br.poorbnb.poorbnb.pattern.command;
 
 import org.br.poorbnb.poorbnb.constant.HotelConstants;
 import org.br.poorbnb.poorbnb.model.Hotel;
@@ -11,11 +11,9 @@ import java.util.Map;
 
 @Service
 public class HotelCommand {
-    private HotelService hotelService;
 
-    @Autowired
-    public HotelCommand(HotelService hotelService) {
-        this.hotelService = hotelService;
+    public HotelCommand() {
+        super();
     }
 
     public Map<Condition, Handler> getCommanderOfHotel(Hotel hotel) {
@@ -31,7 +29,7 @@ public class HotelCommand {
                 () -> System.out.println("Deve manter a precificacao"));
         map.put((r) -> r >= HotelConstants.ONE && r < HotelConstants.THREE,
                 () -> System.out.println("será menos privilegiado na pesquisa"));
-        map.put((r) -> r < HotelConstants.ONE, () -> this.hotelService.removerHotel(hotel));
+        map.put((r) -> r < HotelConstants.ONE, () -> System.out.println("sei la"));
 
         return map;
     }

@@ -1,4 +1,4 @@
-package org.br.poorbnb.poorbnb.any.command;
+package org.br.poorbnb.poorbnb.pattern.command;
 
 @FunctionalInterface
 public interface Handler {

@@ -18,8 +18,7 @@ public class Servico implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@SequenceGenerator(name="SQ_ID_SERVICO", allocationSize = 1, sequenceName="SQ_ID_SERVICO")
-	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="SQ_ID_SERVICO")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name="ID_SERVICO")
 	private Long idServico;
 

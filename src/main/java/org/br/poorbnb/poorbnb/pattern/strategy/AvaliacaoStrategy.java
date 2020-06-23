@@ -1,4 +1,4 @@
-package org.br.poorbnb.poorbnb.any.strategy;
+package org.br.poorbnb.poorbnb.pattern.strategy;
 
 @FunctionalInterface
 public interface AvaliacaoStrategy <T> {

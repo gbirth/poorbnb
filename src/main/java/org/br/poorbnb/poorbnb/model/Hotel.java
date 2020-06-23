@@ -29,8 +29,7 @@ public class Hotel implements Serializable {
 	private static final long serialVersionUID = 4474361041998773912L;
 
 	@Id
-	@SequenceGenerator(name="SQ_ID_HOTEL", allocationSize = 1, sequenceName="SQ_ID_HOTEL")
-	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="SQ_ID_HOTEL")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name="ID_HOTEL")
 	private Long idHotel;
 

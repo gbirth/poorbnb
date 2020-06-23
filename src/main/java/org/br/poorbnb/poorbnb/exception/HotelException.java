@@ -8,22 +8,22 @@ import lombok.Data;
 @Data
 public class HotelException extends Exception {
     private String message;
-    private String cause;
+    private String causedFor;
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    private String stackTrace;
+    private String stTrace;
 
-    public HotelException(final String message, final String cause, final String stackTrace) {
+    public HotelException(final String message, final String causedFor, final String stTrace) {
         super();
         this.message = message;
-        this.cause = cause;
-        this.stackTrace = stackTrace;
+        this.causedFor = causedFor;
+        this.stTrace = stTrace;
     }
 
-    public HotelException(final String message, final String cause) {
+    public HotelException(final String message, final String causedFor) {
         super();
         this.message = message;
-        this.cause = cause;
+        this.causedFor = causedFor;
     }
 
 }
