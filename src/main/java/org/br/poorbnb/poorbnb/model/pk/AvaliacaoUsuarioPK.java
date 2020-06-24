@@ -12,26 +12,11 @@ public class AvaliacaoUsuarioPK implements Serializable {
 	//default serial version id, required for serializable classes.
 	private static final long serialVersionUID = 1L;
 
-	@Column(name="ID_USUARIO_AVALIADO")
+	@Column(name="ID_USUARIO_AVALIADO", insertable=false, updatable=false)
 	private int idUsuarioAvaliado;
 
-	@Column(name="ID_AVALIADOR")
+	@Column(name="ID_AVALIADOR", insertable=false, updatable=false)
 	private int idAvaliador;
-
-	public AvaliacaoUsuarioPK() {
-	}
-	public int getIdUsuarioAvaliado() {
-		return this.idUsuarioAvaliado;
-	}
-	public void setIdUsuarioAvaliado(int idUsuarioAvaliado) {
-		this.idUsuarioAvaliado = idUsuarioAvaliado;
-	}
-	public int getIdAvaliador() {
-		return this.idAvaliador;
-	}
-	public void setIdAvaliador(int idAvaliador) {
-		this.idAvaliador = idAvaliador;
-	}
 
 	public boolean equals(Object other) {
 		if (this == other) {
