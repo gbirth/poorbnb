@@ -1,58 +1,47 @@
 package org.br.poorbnb.poorbnb.model;
 
+import java.io.Serializable;
+
+import javax.persistence.Column;
+import javax.persistence.EmbeddedId;
+import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.NamedQuery;
+import javax.persistence.Table;
+
 import org.br.poorbnb.poorbnb.model.pk.AvaliacaoHotelPK;
 
-import java.io.Serializable;
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
-
+import lombok.Data;
 
 /**
  * The persistent class for the avaliacao_hotel database table.
  * 
  */
 @Entity
-@Table(name="avaliacao_hotel")
-
+@Table(name = "avaliacao_hotel")
+@NamedQuery(name = "AvaliacaoHotel.findAll", query = "SELECT a FROM AvaliacaoHotel a")
+@Data
 public class AvaliacaoHotel implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@EmbeddedId
 	private AvaliacaoHotelPK id;
 
-	@NotNull(message = "Não é possível avaliar um hotel sem referencia-lo")
-	@Column(name="ID_RESERVA")
+	@Column(name = "ID_RESERVA")
 	private Long idReserva;
 
-	@NotNull
-	@Column(name="NOTA_HOTEL")
-	private Double notaHotel;
+	@Column(name = "NOTA_HOTEL")
+	private double notaHotel;
 
-	public AvaliacaoHotel() {
-	}
+	// bi-directional many-to-one association to Usuario
+	@ManyToOne
+	@JoinColumn(name = "ID_AVALIADOR", referencedColumnName = "ID_USUARIO", insertable = false, updatable = false)
+	private Usuario usuario;
 
-	public AvaliacaoHotelPK getId() {
-		return this.id;
-	}
-
-	public void setId(AvaliacaoHotelPK id) {
-		this.id = id;
-	}
-
-	public Long getIdReserva() {
-		return this.idReserva;
-	}
-
-	public void setIdReserva(Long idReserva) {
-		this.idReserva = idReserva;
-	}
-
-	public Double getNotaHotel() {
-		return this.notaHotel;
-	}
-
-	public void setNotaHotel(Double notaHotel) {
-		this.notaHotel = notaHotel;
-	}
+	// bi-directional many-to-one association to Hotel
+	@ManyToOne
+	@JoinColumn(name = "ID_HOTEL_AVALIADO", referencedColumnName = "ID_HOTEL", insertable = false, updatable = false)
+	private Hotel hotel;
 
 }
