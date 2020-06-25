@@ -1,46 +1,55 @@
 package org.br.poorbnb.poorbnb.model;
 
-import java.io.Serializable;
-
-import javax.persistence.Column;
-import javax.persistence.EmbeddedId;
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.NamedQuery;
-import javax.persistence.Table;
 import org.br.poorbnb.poorbnb.model.pk.AvaliacaoUsuarioPK;
 
-import lombok.Data;
+import java.io.Serializable;
+import javax.persistence.*;
+
 
 /**
  * The persistent class for the avaliacao_usuario database table.
  * 
  */
 @Entity
-@Table(name = "avaliacao_usuario")
-@NamedQuery(name = "AvaliacaoUsuario.findAll", query = "SELECT a FROM AvaliacaoUsuario a")
-@Data
+@Table(name="avaliacao_usuario")
+@NamedQuery(name="AvaliacaoUsuario.findAll", query="SELECT a FROM AvaliacaoUsuario a")
 public class AvaliacaoUsuario implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@EmbeddedId
 	private AvaliacaoUsuarioPK id;
 
-	@Column(name = "ID_RESERVA")
+	@Column(name="ID_RESERVA")
 	private int idReserva;
 
-	@Column(name = "NOTA_USUARIO")
+	@Column(name="NOTA_USUARIO")
 	private double notaUsuario;
 
-	// bi-directional many-to-one association to Usuario
-	@ManyToOne
-	@JoinColumn(name = "ID_USUARIO_AVALIADO",referencedColumnName = "ID_USUARIO", insertable=false, updatable=false)
-	private Usuario usuario1;
+	public AvaliacaoUsuario() {
+	}
 
-	// bi-directional many-to-one association to Usuario
-	@ManyToOne
-	@JoinColumn(name = "ID_AVALIADOR",referencedColumnName = "ID_USUARIO", insertable=false, updatable=false)
-	private Usuario usuario2;
+	public AvaliacaoUsuarioPK getId() {
+		return this.id;
+	}
+
+	public void setId(AvaliacaoUsuarioPK id) {
+		this.id = id;
+	}
+
+	public int getIdReserva() {
+		return this.idReserva;
+	}
+
+	public void setIdReserva(int idReserva) {
+		this.idReserva = idReserva;
+	}
+
+	public double getNotaUsuario() {
+		return this.notaUsuario;
+	}
+
+	public void setNotaUsuario(double notaUsuario) {
+		this.notaUsuario = notaUsuario;
+	}
 
 }
