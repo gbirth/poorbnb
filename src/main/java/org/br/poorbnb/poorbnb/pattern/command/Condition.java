@@ -1,4 +1,6 @@
-package org.br.poorbnb.poorbnb.any.command;
+package org.br.poorbnb.poorbnb.pattern.command;
+
+import java.util.Objects;
 
 @FunctionalInterface
 public interface Condition {
@@ -6,6 +8,7 @@ public interface Condition {
     boolean condition(Double rate);
 
     default boolean conditionChecker(Double rate) {
+        Objects.requireNonNull(rate);
         return condition(rate);
     }
 }

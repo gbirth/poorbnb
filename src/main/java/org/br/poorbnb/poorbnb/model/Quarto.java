@@ -18,8 +18,7 @@ public class Quarto implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@SequenceGenerator(name="SQ_ID_QUARTO", allocationSize = 1, sequenceName="SQ_ID_QUARTO")
-	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="SQ_ID_QUARTO")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name="ID_QUARTO")
 	private Long idQuarto;
 

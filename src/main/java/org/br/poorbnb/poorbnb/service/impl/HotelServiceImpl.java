@@ -1,32 +1,30 @@
 package org.br.poorbnb.poorbnb.service.impl;
 
-import org.br.poorbnb.poorbnb.any.strategy.UsuarioEnum;
-import org.br.poorbnb.poorbnb.any.command.Condition;
-import org.br.poorbnb.poorbnb.any.command.Handler;
-import org.br.poorbnb.poorbnb.any.command.HotelCommand;
+import org.br.poorbnb.poorbnb.pattern.strategy.UsuarioEnum;
+import org.br.poorbnb.poorbnb.pattern.command.Condition;
+import org.br.poorbnb.poorbnb.pattern.command.Handler;
 import org.br.poorbnb.poorbnb.constant.HotelConstants;
 import org.br.poorbnb.poorbnb.model.Hotel;
 import org.br.poorbnb.poorbnb.repository.HotelRepository;
+import org.br.poorbnb.poorbnb.service.AvaliacaoHotelService;
 import org.br.poorbnb.poorbnb.service.HotelService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 
 @Service
 public class HotelServiceImpl implements HotelService {
 
     private HotelRepository hotelRepository;
-    private HotelCommand hotelCommand;
+    private AvaliacaoHotelService avaliacaoHotelService;
 
     @Autowired
-    public HotelServiceImpl(HotelRepository repository, HotelCommand hotelCommand) {
+    public HotelServiceImpl(HotelRepository repository,
+                            AvaliacaoHotelService avaliacaoHotelService) {
         this.hotelRepository = repository;
-        this.hotelCommand = hotelCommand;
+        this.avaliacaoHotelService = avaliacaoHotelService;
     }
 
     @Override
@@ -45,8 +43,9 @@ public class HotelServiceImpl implements HotelService {
         final List<Hotel> reviwed = new ArrayList<>();
 
         hoteis.forEach(hotel -> {
-            final Double rateAverage = UsuarioEnum.HOTEL.calcularAvaliacao(hotel);
-            final Map<Condition, Handler> commanderOfHotel = this.hotelCommand.getCommanderOfHotel(hotel);
+            final Double rateAverage = UsuarioEnum.HOTEL.calcularAvaliacao(hotel, this.avaliacaoHotelService);
+
+            final Map<Condition, Handler> commanderOfHotel = getCommanderOfHotel(hotel);
             findCondtion(commanderOfHotel, rateAverage);
 
             if (rateAverage >= HotelConstants.THREE && rateAverage < HotelConstants.FOUR_AND_HALF) {
@@ -66,4 +65,21 @@ public class HotelServiceImpl implements HotelService {
         commanderOfHotel.get(first.get()).handler();
     }
 
+    public Map<Condition, Handler> getCommanderOfHotel(Hotel hotel) {
+
+        final Map<Condition, Handler> map = new HashMap<>();
+        /* Ficara desse jeito até os serviços ficarem prontos, mas a ideia é que
+            o handler seja um meio de se executar alguma ação proveniente de um serviço
+            não padronizada para todas as condições
+         */
+        map.put((r) -> r >= HotelConstants.FOUR_AND_HALF,
+                () -> System.out.println("deve conceber desconto")); //ta faltando ainda a tabela de cobrança
+        map.put((r) -> r >= HotelConstants.THREE && r < HotelConstants.FOUR_AND_HALF,
+                () -> System.out.println("Deve manter a precificacao"));
+        map.put((r) -> r >= HotelConstants.ONE && r < HotelConstants.THREE,
+                () -> System.out.println("será menos privilegiado na pesquisa"));
+        map.put((r) -> r < HotelConstants.ONE, () -> removerHotel(hotel));
+
+        return map;
+    }
 }
