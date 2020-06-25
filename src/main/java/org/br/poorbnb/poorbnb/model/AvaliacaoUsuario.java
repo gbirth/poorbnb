@@ -35,12 +35,12 @@ public class AvaliacaoUsuario implements Serializable {
 
 	// bi-directional many-to-one association to Usuario
 	@ManyToOne
-	@JoinColumn(name = "ID_USUARIO_AVALIADO")
+	@JoinColumn(name = "ID_USUARIO_AVALIADO",referencedColumnName = "ID_USUARIO", insertable=false, updatable=false)
 	private Usuario usuario1;
 
 	// bi-directional many-to-one association to Usuario
 	@ManyToOne
-	@JoinColumn(name = "ID_AVALIADOR")
+	@JoinColumn(name = "ID_AVALIADOR",referencedColumnName = "ID_USUARIO", insertable=false, updatable=false)
 	private Usuario usuario2;
 
 }

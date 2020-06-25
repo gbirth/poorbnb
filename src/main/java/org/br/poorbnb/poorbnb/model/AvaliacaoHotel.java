@@ -5,9 +5,6 @@ import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQuery;
@@ -39,12 +36,12 @@ public class AvaliacaoHotel implements Serializable {
 
 	// bi-directional many-to-one association to Usuario
 	@ManyToOne
-	@JoinColumn(name = "ID_AVALIADOR")
+	@JoinColumn(name = "ID_AVALIADOR", referencedColumnName = "ID_USUARIO", insertable = false, updatable = false)
 	private Usuario usuario;
 
 	// bi-directional many-to-one association to Hotel
 	@ManyToOne
-	@JoinColumn(name = "ID_HOTEL_AVALIADO")
+	@JoinColumn(name = "ID_HOTEL_AVALIADO", referencedColumnName = "ID_HOTEL", insertable = false, updatable = false)
 	private Hotel hotel;
 
 }
