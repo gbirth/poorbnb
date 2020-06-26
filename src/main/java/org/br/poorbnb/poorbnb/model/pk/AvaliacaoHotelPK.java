@@ -1,13 +1,18 @@
 package org.br.poorbnb.poorbnb.model.pk;
 
 import java.io.Serializable;
-import javax.persistence.*;
+
+import javax.persistence.Column;
+import javax.persistence.Embeddable;
+
+import lombok.Data;
 
 /**
  * The primary key class for the avaliacao_hotel database table.
  * 
  */
 @Embeddable
+@Data
 public class AvaliacaoHotelPK implements Serializable {
 	//default serial version id, required for serializable classes.
 	private static final long serialVersionUID = 1L;
@@ -15,23 +20,9 @@ public class AvaliacaoHotelPK implements Serializable {
 	@Column(name="ID_HOTEL_AVALIADO", insertable=false, updatable=false)
 	private int idHotelAvaliado;
 
-	@Column(name="ID_AVALIADOR")
+	@Column(name="ID_AVALIADOR", insertable=false, updatable=false)
 	private int idAvaliador;
 
-	public AvaliacaoHotelPK() {
-	}
-	public int getIdHotelAvaliado() {
-		return this.idHotelAvaliado;
-	}
-	public void setIdHotelAvaliado(int idHotelAvaliado) {
-		this.idHotelAvaliado = idHotelAvaliado;
-	}
-	public int getIdAvaliador() {
-		return this.idAvaliador;
-	}
-	public void setIdAvaliador(int idAvaliador) {
-		this.idAvaliador = idAvaliador;
-	}
 
 	public boolean equals(Object other) {
 		if (this == other) {
