@@ -30,6 +30,7 @@ public class ControllerUsuario {
 		this.usuarioService = usuarioService;
 	}
 
+	
 	@GetMapping("/todos-usuarios")
 	public ResponseEntity<List<Usuario>> obterTodosUsuarios() {
 		return ResponseEntity.ok(this.usuarioService.obterTodosUsuarios());
