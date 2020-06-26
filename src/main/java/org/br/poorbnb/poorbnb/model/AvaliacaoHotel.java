@@ -4,6 +4,7 @@ import org.br.poorbnb.poorbnb.model.pk.AvaliacaoHotelPK;
 
 import java.io.Serializable;
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 
 
 /**
@@ -19,9 +20,11 @@ public class AvaliacaoHotel implements Serializable {
 	@EmbeddedId
 	private AvaliacaoHotelPK id;
 
+	@NotNull(message = "Não é possível avaliar um hotel sem referencia-lo")
 	@Column(name="ID_RESERVA")
 	private Long idReserva;
 
+	@NotNull
 	@Column(name="NOTA_HOTEL")
 	private Double notaHotel;
 
