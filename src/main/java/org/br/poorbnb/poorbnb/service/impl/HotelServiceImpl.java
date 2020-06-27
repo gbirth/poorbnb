@@ -7,6 +7,7 @@ import org.br.poorbnb.poorbnb.constant.HotelConstants;
 import org.br.poorbnb.poorbnb.model.Hotel;
 import org.br.poorbnb.poorbnb.repository.HotelRepository;
 import org.br.poorbnb.poorbnb.service.AvaliacaoHotelService;
+import org.br.poorbnb.poorbnb.service.CobrancaHotelService;
 import org.br.poorbnb.poorbnb.service.HotelService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,12 +20,15 @@ public class HotelServiceImpl implements HotelService {
 
     private HotelRepository hotelRepository;
     private AvaliacaoHotelService avaliacaoHotelService;
+    private CobrancaHotelService cobrancaHotelService;
 
     @Autowired
     public HotelServiceImpl(HotelRepository repository,
-                            AvaliacaoHotelService avaliacaoHotelService) {
+                            AvaliacaoHotelService avaliacaoHotelService,
+                            CobrancaHotelService cobrancaHotelService) {
         this.hotelRepository = repository;
         this.avaliacaoHotelService = avaliacaoHotelService;
+        this.cobrancaHotelService = cobrancaHotelService;
     }
 
     @Override
@@ -56,6 +60,11 @@ public class HotelServiceImpl implements HotelService {
         return reviwed;
     }
 
+    @Override
+    public List<Hotel> listarHoteis() {
+        return this.hotelRepository.listarHoteis();
+    }
+
     private void findCondtion(final Map<Condition, Handler> commanderOfHotel, final Double rateAverage) {
         final Optional<Condition> first = commanderOfHotel.keySet()
                 .stream()
@@ -68,16 +77,13 @@ public class HotelServiceImpl implements HotelService {
     public Map<Condition, Handler> getCommanderOfHotel(Hotel hotel) {
 
         final Map<Condition, Handler> map = new HashMap<>();
-        /* Ficara desse jeito até os serviços ficarem prontos, mas a ideia é que
-            o handler seja um meio de se executar alguma ação proveniente de um serviço
-            não padronizada para todas as condições
-         */
+
         map.put((r) -> r >= HotelConstants.FOUR_AND_HALF,
-                () -> System.out.println("deve conceber desconto")); //ta faltando ainda a tabela de cobrança
+                () -> this.cobrancaHotelService.conceberDesconto(hotel));
         map.put((r) -> r >= HotelConstants.THREE && r < HotelConstants.FOUR_AND_HALF,
-                () -> System.out.println("Deve manter a precificacao"));
+                () -> this.cobrancaHotelService.manterEstavelOuRemoverRestricao(hotel));
         map.put((r) -> r >= HotelConstants.ONE && r < HotelConstants.THREE,
-                () -> System.out.println("será menos privilegiado na pesquisa"));
+                () -> this.cobrancaHotelService.aplicarRestricaoPesquisa(hotel));
         map.put((r) -> r < HotelConstants.ONE, () -> removerHotel(hotel));
 
         return map;

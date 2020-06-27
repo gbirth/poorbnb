@@ -12,4 +12,6 @@ public interface HotelService {
     void removerHotel(Hotel hotel);
 
     List<Hotel> verificarAvaliacao();
+
+    List<Hotel> listarHoteis();
 }
