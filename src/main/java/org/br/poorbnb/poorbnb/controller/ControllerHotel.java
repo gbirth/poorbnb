@@ -29,4 +29,9 @@ public class ControllerHotel {
     public ResponseEntity<List<Hotel>> verificarAvaliacoes() {
         return ResponseEntity.ok(this.hotelService.verificarAvaliacao());
     }
+
+    @GetMapping
+    public ResponseEntity<List<Hotel>> listarHoteis() {
+        return ResponseEntity.ok(this.hotelService.listarHoteis());
+    }
 }

@@ -48,6 +48,9 @@ public class Hotel implements Serializable {
 	@Column(name="TELEFONE_OPC")
 	private String telefoneOpc;
 
+	@Column(name="DESATIVADO_S_N")
+	private String desativadoSN;
+
 	//bi-directional many-to-one association to Usuario
 	@Cascade(CascadeType.ALL)
 	@ManyToOne
@@ -66,4 +69,6 @@ public class Hotel implements Serializable {
 	@OneToMany(mappedBy="hotel")
 	private List<Servico> servicos;
 
+	@OneToOne(mappedBy = "hotel")
+	private CobrancaHotel cobrancaHotel;
 }
