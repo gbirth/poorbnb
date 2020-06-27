@@ -1,5 +1,6 @@
 package org.br.poorbnb.poorbnb.service.impl;
 
+import org.br.poorbnb.poorbnb.event.AppEvent;
 import org.br.poorbnb.poorbnb.pattern.strategy.UsuarioEnum;
 import org.br.poorbnb.poorbnb.pattern.command.Condition;
 import org.br.poorbnb.poorbnb.pattern.command.Handler;
@@ -10,6 +11,7 @@ import org.br.poorbnb.poorbnb.service.AvaliacaoHotelService;
 import org.br.poorbnb.poorbnb.service.CobrancaHotelService;
 import org.br.poorbnb.poorbnb.service.HotelService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -21,19 +23,28 @@ public class HotelServiceImpl implements HotelService {
     private HotelRepository hotelRepository;
     private AvaliacaoHotelService avaliacaoHotelService;
     private CobrancaHotelService cobrancaHotelService;
+    private ApplicationEventPublisher applicationEventPublisher;
 
     @Autowired
     public HotelServiceImpl(HotelRepository repository,
                             AvaliacaoHotelService avaliacaoHotelService,
-                            CobrancaHotelService cobrancaHotelService) {
+                            CobrancaHotelService cobrancaHotelService,
+                            ApplicationEventPublisher applicationEventPublisher) {
         this.hotelRepository = repository;
         this.avaliacaoHotelService = avaliacaoHotelService;
         this.cobrancaHotelService = cobrancaHotelService;
+        this.applicationEventPublisher = applicationEventPublisher;
     }
 
     @Override
     public Hotel inserirHotel(Hotel hotel) {
-      return this.hotelRepository.save(hotel);
+        final Hotel hot = this.hotelRepository.save(hotel);
+        publicarEvento(hotel);
+        return hot;
+    }
+
+    public void publicarEvento(Hotel hotel){
+      this.applicationEventPublisher.publishEvent(new AppEvent(hotel));
     }
 
     @Override
@@ -62,7 +73,9 @@ public class HotelServiceImpl implements HotelService {
 
     @Override
     public List<Hotel> listarHoteis() {
-        return this.hotelRepository.listarHoteis();
+
+        final List<Hotel> hotels = this.hotelRepository.listarHoteis();
+        return hotels;
     }
 
     private void findCondtion(final Map<Condition, Handler> commanderOfHotel, final Double rateAverage) {

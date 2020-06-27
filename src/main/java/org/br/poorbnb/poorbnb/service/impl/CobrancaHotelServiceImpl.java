@@ -1,11 +1,13 @@
 package org.br.poorbnb.poorbnb.service.impl;
 
 import org.br.poorbnb.poorbnb.constant.HotelConstants;
+import org.br.poorbnb.poorbnb.event.AppEvent;
 import org.br.poorbnb.poorbnb.model.CobrancaHotel;
 import org.br.poorbnb.poorbnb.model.Hotel;
 import org.br.poorbnb.poorbnb.repository.CobrancaHotelRepository;
 import org.br.poorbnb.poorbnb.service.CobrancaHotelService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -34,6 +36,8 @@ public class CobrancaHotelServiceImpl implements CobrancaHotelService {
         final Optional<CobrancaHotel> cobrancaHotel = obterUltimaCobrancaHotel(hotel.getIdHotel());
         final CobrancaHotel cobranca = criarCobranca(cobrancaHotel);
 
+        cobranca.setIdHotel(hotel.getIdHotel());
+        cobranca.setHotel(hotel);
         cobranca.setMalAvaliado(HotelConstants.NAO);
         cobranca.setValorDesconto(HotelConstants.DESCONTO);
         return salvarCobranca(cobranca);
@@ -44,9 +48,21 @@ public class CobrancaHotelServiceImpl implements CobrancaHotelService {
         final Optional<CobrancaHotel> cobrancaHotel = obterUltimaCobrancaHotel(hotel.getIdHotel());
         final CobrancaHotel cobranca = criarCobranca(cobrancaHotel);
 
+        cobranca.setIdHotel(hotel.getIdHotel());
+        cobranca.setHotel(hotel);
         cobranca.setMalAvaliado(HotelConstants.SIM);
         cobranca.setValorDesconto(null);
         return salvarCobranca(cobranca);
+    }
+
+    @EventListener({AppEvent.class})
+    public void handleHotelInserido(AppEvent appEvent) {
+        final Hotel source = (Hotel) appEvent.getSource();
+        final CobrancaHotel cobrancaHotel = criarCobranca(Optional.ofNullable(null));
+
+        cobrancaHotel.setIdHotel(source.getIdHotel());
+        cobrancaHotel.setValorDesconto(null);
+        salvarCobranca(cobrancaHotel);
     }
 
     @Override
@@ -54,7 +70,8 @@ public class CobrancaHotelServiceImpl implements CobrancaHotelService {
         final Optional<CobrancaHotel> cobrancaHotel = obterUltimaCobrancaHotel(hotel.getIdHotel());
         final CobrancaHotel cobranca = criarCobranca(cobrancaHotel);
 
-        cobranca.setMalAvaliado(HotelConstants.NAO);
+        cobranca.setIdHotel(hotel.getIdHotel());
+        cobranca.setHotel(hotel);
 
         return salvarCobranca(cobranca);
     }
@@ -77,7 +94,7 @@ public class CobrancaHotelServiceImpl implements CobrancaHotelService {
          copy.setHotel(cobHotel.getHotel());
         });
 
-        return cobrancaHotel.isPresent() ? copy : new CobrancaHotel(HotelConstants.ONE);
+        return cobrancaHotel.isPresent() ? copy : new CobrancaHotel(HotelConstants.ONE, HotelConstants.NAO);
     }
 
     @Override

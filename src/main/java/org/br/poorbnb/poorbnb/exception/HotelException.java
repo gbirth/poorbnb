@@ -8,9 +8,11 @@ import lombok.Data;
 @Data
 public class HotelException extends Exception {
     private String message;
+
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private String causedFor;
 
-    @JsonInclude(JsonInclude.Include.NON_NULL)
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private String stTrace;
 
     public HotelException(final String message, final String causedFor, final String stTrace) {

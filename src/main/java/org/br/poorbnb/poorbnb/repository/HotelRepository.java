@@ -11,11 +11,12 @@ import java.util.List;
 @Repository
 public interface HotelRepository extends JpaRepository<Hotel, Long> {
 
-    @Query(" from Hotel hot "
-            + " left join hot.cobrancaHotel ch "
+    @Query(" select hot from Hotel hot "
+            + " inner join hot.cobrancaHotel ch "
             + "     where ch.histCobr = (select max(hc.histCobr) from CobrancaHotel hc "
             + "                               where hc.idHotel = ch.idHotel) "
-            + "     and hot.desativadoSN = " + HotelConstants.NAO
+            + "     and (hot.desativadoSN = '" + HotelConstants.NAO + "'"
+            + "      or hot.desativadoSN is null) "
             + "     order by ch.malAvaliado ")
     List<Hotel> listarHoteis();
 }
