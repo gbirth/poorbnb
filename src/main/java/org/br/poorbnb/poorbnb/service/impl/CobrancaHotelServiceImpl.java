@@ -61,8 +61,8 @@ public class CobrancaHotelServiceImpl implements CobrancaHotelService {
 
     @Override
     public Integer obterUltimoHistCobr(Optional<CobrancaHotel> cobrancaHotel) {
-        final Integer histCobr = cobrancaHotel.isPresent() ? cobrancaHotel.get().getHistCobr() : 0;
-        return histCobr == null ? HotelConstants.ONE : histCobr + HotelConstants.ONE;
+        final Integer histCobr = cobrancaHotel.isPresent() ? cobrancaHotel.get().getHistCobr() : HotelConstants.ZERO;
+        return histCobr + HotelConstants.ONE;
     }
 
     @Override
