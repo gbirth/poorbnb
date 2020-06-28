@@ -31,7 +31,7 @@ public class ControllerHotel {
     }
 
     @GetMapping
-    public ResponseEntity<List<Hotel>> listarHoteis() {
-        return ResponseEntity.ok(this.hotelService.listarHoteis());
+    public ResponseEntity<List<Hotel>> listarHoteis(@RequestParam(required = false) String nomeHotel) {
+        return ResponseEntity.ok(this.hotelService.listarHoteis(nomeHotel));
     }
 }

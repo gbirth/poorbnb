@@ -31,7 +31,7 @@ public class CobrancaHotel implements Serializable {
 	@Column(name="HIST_COBR")
 	private Integer histCobr;
 
-	@OneToOne
+	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "ID_HOTEL")
 	private Hotel hotel;
 
@@ -39,7 +39,8 @@ public class CobrancaHotel implements Serializable {
 		super();
 	}
 
-	public CobrancaHotel(final Integer histCobr) {
+	public CobrancaHotel(final Integer histCobr, final String malAvaliado) {
 		this.histCobr = histCobr;
+		this.malAvaliado = malAvaliado;
 	}
 }

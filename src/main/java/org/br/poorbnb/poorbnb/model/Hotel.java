@@ -8,9 +8,8 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.validation.constraints.NotEmpty;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
-import org.hibernate.annotations.Cascade;
-import org.hibernate.annotations.CascadeType;
 
 
 /**
@@ -52,8 +51,8 @@ public class Hotel implements Serializable {
 	private String desativadoSN;
 
 	//bi-directional many-to-one association to Usuario
-	@Cascade(CascadeType.ALL)
-	@ManyToOne
+
+	@ManyToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name="ID_PROPRIETARIO")
 	private Usuario usuario;
 
@@ -69,6 +68,7 @@ public class Hotel implements Serializable {
 	@OneToMany(mappedBy="hotel")
 	private List<Servico> servicos;
 
-	@OneToOne(mappedBy = "hotel")
+	@JsonIgnore
+	@OneToOne(mappedBy = "hotel", fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
 	private CobrancaHotel cobrancaHotel;
 }
