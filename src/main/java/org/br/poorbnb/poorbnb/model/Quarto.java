@@ -1,10 +1,18 @@
 package org.br.poorbnb.poorbnb.model;
 
-import lombok.Data;
-
 import java.io.Serializable;
-import javax.persistence.*;
 import java.math.BigDecimal;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+
+import lombok.Data;
 
 
 /**
@@ -30,7 +38,7 @@ public class Quarto implements Serializable {
 
 	@Column(name="OCUPADO_S_N")
 	private String ocupadoSN;
-
+	
 	@Column(name="PRECO")
 	private BigDecimal preco;
 
