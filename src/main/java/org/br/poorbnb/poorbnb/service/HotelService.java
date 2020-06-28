@@ -13,5 +13,5 @@ public interface HotelService {
 
     List<Hotel> verificarAvaliacao();
 
-    List<Hotel> listarHoteis();
+    List<Hotel> listarHoteis(String nomeHotel);
 }

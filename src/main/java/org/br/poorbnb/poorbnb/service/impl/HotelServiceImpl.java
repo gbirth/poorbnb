@@ -49,7 +49,8 @@ public class HotelServiceImpl implements HotelService {
 
     @Override
     public void removerHotel(Hotel hotel) {
-      this.hotelRepository.delete(hotel);
+      hotel.setDesativadoSN(HotelConstants.SIM);
+      this.hotelRepository.saveAndFlush(hotel);
     }
 
     @Override
@@ -72,10 +73,8 @@ public class HotelServiceImpl implements HotelService {
     }
 
     @Override
-    public List<Hotel> listarHoteis() {
-
-        final List<Hotel> hotels = this.hotelRepository.listarHoteis();
-        return hotels;
+    public List<Hotel> listarHoteis(String nomeHotel) {
+        return this.hotelRepository.listarHoteis(nomeHotel);
     }
 
     private void findCondtion(final Map<Condition, Handler> commanderOfHotel, final Double rateAverage) {

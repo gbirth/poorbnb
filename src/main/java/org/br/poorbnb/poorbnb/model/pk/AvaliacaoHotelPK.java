@@ -14,35 +14,13 @@ import lombok.Data;
 @Embeddable
 @Data
 public class AvaliacaoHotelPK implements Serializable {
-	//default serial version id, required for serializable classes.
+
 	private static final long serialVersionUID = 1L;
 
-	@Column(name="ID_HOTEL_AVALIADO", insertable=false, updatable=false)
-	private int idHotelAvaliado;
+	@Column(name="ID_HOTEL_AVALIADO", updatable=false)
+	private Long idHotelAvaliado;
 
-	@Column(name="ID_AVALIADOR", insertable=false, updatable=false)
-	private int idAvaliador;
+	@Column(name="ID_AVALIADOR", updatable=false)
+	private Long idAvaliador;
 
-
-	public boolean equals(Object other) {
-		if (this == other) {
-			return true;
-		}
-		if (!(other instanceof AvaliacaoHotelPK)) {
-			return false;
-		}
-		AvaliacaoHotelPK castOther = (AvaliacaoHotelPK)other;
-		return 
-			(this.idHotelAvaliado == castOther.idHotelAvaliado)
-			&& (this.idAvaliador == castOther.idAvaliador);
-	}
-
-	public int hashCode() {
-		final int prime = 31;
-		int hash = 17;
-		hash = hash * prime + this.idHotelAvaliado;
-		hash = hash * prime + this.idAvaliador;
-		
-		return hash;
-	}
 }
