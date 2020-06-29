@@ -20,7 +20,7 @@ public class CobrancaUsuario implements Serializable {
 
 	@Id
 	@Column(name="ID_USUARIO")
-	private Integer idUsuario;
+	private Long idUsuario;
 
 	@Column(name="VALOR_DESCONTO")
 	private BigDecimal valorDesconto;

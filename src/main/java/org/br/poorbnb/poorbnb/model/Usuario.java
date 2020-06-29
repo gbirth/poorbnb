@@ -7,6 +7,7 @@ import java.util.List;
 import javax.persistence.*;
 import javax.validation.constraints.Max;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Data;
 
 
@@ -61,9 +62,19 @@ public class Usuario implements Serializable {
 	private List<Hotel> hotels;
 
 	//bi-directional many-to-one association to Reserva
-	@OneToMany(mappedBy="usuario")
+	@JsonManagedReference(value = "user-reference")
+	@OneToMany(mappedBy="usuario", fetch = FetchType.LAZY)
 	private List<Reserva> reservas;
 
 	@OneToOne(mappedBy = "usuario")
 	private CobrancaUsuario cobrancaUsuario;
+
+	public Usuario(Long idUsuario) {
+		super();
+		this.idUsuario = idUsuario;
+	}
+
+	public Usuario() {
+		super();
+	}
 }

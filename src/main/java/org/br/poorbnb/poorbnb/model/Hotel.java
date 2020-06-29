@@ -8,8 +8,11 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.validation.constraints.NotEmpty;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonView;
 import lombok.Data;
+
 
 
 /**
@@ -61,14 +64,24 @@ public class Hotel implements Serializable {
 	private List<Quarto> quartos;
 
 	//bi-directional many-to-one association to Reserva
-	@OneToMany(mappedBy="hotel")
+	@JsonManagedReference(value = "hotel-reference")
+	@OneToMany(mappedBy="hotel", fetch = FetchType.LAZY)
 	private List<Reserva> reservas;
 
 	//bi-directional many-to-one association to Servico
 	@OneToMany(mappedBy="hotel")
 	private List<Servico> servicos;
 
-	@JsonIgnore
+
 	@OneToOne(mappedBy = "hotel", fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
 	private CobrancaHotel cobrancaHotel;
+
+	public Hotel(Long idHotel) {
+		super();
+		this.idHotel = idHotel;
+	}
+
+	public Hotel() {
+		super();
+	}
 }
