@@ -50,7 +50,6 @@ public class ReservaServiceImpl implements ReservaService {
 
     @Override
     public List<Reserva> encontrarReservaPorIdUsuario(Long usuId) {
-        Objects.requireNonNull(usuId);
         return this.reservaRepository.listarReservasUsuario(usuId);
     }
 }
