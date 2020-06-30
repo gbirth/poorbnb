@@ -8,6 +8,7 @@ public interface QuartoService {
 
 	public Quarto criarQuarto(Quarto quarto) ;
 
+	void callProcedure();
 	
 	public Quarto atualizaQuarto(Long quartoId, Quarto quartoDetails) throws ResourceNotFoundException ;
 

@@ -11,7 +11,7 @@ import java.util.List;
 
 public enum UsuarioEnum implements AvaliacaoStrategy {
     // Pattern para consultar a avaliacao do usuario comum, hotel e do dono do hotel
-    
+
     USUARIO_COMUM {
         @Override
         public Double calcularAvaliacao(Object user, Object getAvaliacao) {

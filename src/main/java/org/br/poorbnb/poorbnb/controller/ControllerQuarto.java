@@ -2,11 +2,13 @@ package org.br.poorbnb.poorbnb.controller;
 
 import javax.validation.Valid;
 
+
 import org.br.poorbnb.poorbnb.exception.ResourceNotFoundException;
 import org.br.poorbnb.poorbnb.model.Quarto;
 import org.br.poorbnb.poorbnb.service.QuartoService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
+
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -41,6 +43,10 @@ public class ControllerQuarto {
 		return ResponseEntity.ok(this.quartoService.atualizaQuarto(QuartoId, quartoDetails));
 	}
 
-	
-}
+	@GetMapping("/call-procedure")
+	public ResponseEntity<String> callProcedure() {
+		this.quartoService.callProcedure();
+		return new ResponseEntity<>("PROCEDURE EXECUTADA COM SUCESSO!", HttpStatus.NO_CONTENT);
+	}
 
+}
