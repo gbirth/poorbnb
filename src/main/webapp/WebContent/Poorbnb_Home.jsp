@@ -1,13 +1,16 @@
 <!doctype html>
+<c: set var="path" value="${pageContext.request.contextPath}">
+</c: set">
 <html>
 <head>
 <meta charset="UTF-8">
 <title>Poorbnb</title>
-<link rel="stylesheet" href="./resources/css/bootstrap.min.css">
+<link rel="stylesheet" href="./WebContent/resources/css/bootstrap.min.css">
 
 
 </head>
-<body background="./resources/imagem/bg.png">
+<body background="./WebContent/resources/imagem/bg.png">
+    ${message}
 	<!-- Navbar -->
 	<nav class="navbar navbar-expand-lg navbar-light bg-light  shadow">
 		<a class="navbar-brand" href="#"> <img
@@ -35,7 +38,7 @@
 			<form class="form-inline my-2 my-lg-0">
 
 				<div class="btn-group " role="group" aria-label="Exemplo básico">
-					<button type="button" class="btn btn-warning">Cadastrar</button>
+					<button href="${path}/usuario/criar-usuario" type="button" class="btn btn-warning">Cadastrar</button>
 					<button type="button" class="btn btn-warning">Entrar</button>
 				</div>
 			</form>
@@ -104,7 +107,7 @@
 				<div class="col-md-4">
 					<div class="card mb-4 shadow-sm">
 
-						<img class="card-img-top" src="./resources/imagem/tumb_1.png"
+						<img class="card-img-top" src="./WebContent/resources/imagem/tumb_1.png"
 							alt="Imagem de capa do card">
 						<div class="card-body">
 							<b>Hotel Bahia do Sol</b>
@@ -125,7 +128,7 @@
 				</div>
 				<div class="col-md-4">
 					<div class="card mb-4 shadow-sm">
-						<img class="card-img-top" src="./resources/imagem/tumb_2.png"
+						<img class="card-img-top" src="./WebContent/resources/imagem/tumb_2.png"
 							alt="Imagem de capa do card">
 						<div class="card-body">
 							<b>Pousada Gia-monte</b>
@@ -145,7 +148,7 @@
 				</div>
 				<div class="col-md-4">
 					<div class="card mb-4 shadow-sm">
-						<img class="card-img-top" src="./resources/imagem/tumb_3.png"
+						<img class="card-img-top" src="./WebContent/resources/imagem/tumb_3.png"
 							alt="Imagem de capa do card">
 						<div class="card-body">
 							<b>Rio way hostel</b>
@@ -166,7 +169,7 @@
 
 				<div class="col-md-4">
 					<div class="card mb-4 shadow-sm">
-						<img class="card-img-top" src="./resources/imagem/tumb_4.png"
+						<img class="card-img-top" src="./WebContent/resources/imagem/tumb_4.png"
 							alt="Imagem de capa do card">
 						<div class="card-body">
 							<b>Hotel Deise Prado</b>
@@ -186,7 +189,7 @@
 				</div>
 				<div class="col-md-4">
 					<div class="card mb-4 shadow-sm">
-						<img class="card-img-top" src="./resources/imagem/tumb_5.png"
+						<img class="card-img-top" src="./WebContent/resources/imagem/tumb_5.png"
 							alt="Imagem de capa do card">
 						<div class="card-body">
 							<b>Econo Lodge</b>
@@ -206,7 +209,7 @@
 				</div>
 				<div class="col-md-4">
 					<div class="card mb-4 shadow-sm">
-						<img class="card-img-top" src="./resources/imagem/tumb_6.png"
+						<img class="card-img-top" src="./WebContent/resources/imagem/tumb_6.png"
 							alt="Imagem de capa do card">
 						<div class="card-body">
 							<b>Hostel Saaris</b>
@@ -227,7 +230,7 @@
 
 				<div class="col-md-4">
 					<div class="card mb-4 shadow-sm">
-						<img class="card-img-top" src="./resources/imagem/tumb_7.png"
+						<img class="card-img-top" src="./WebContent/resources/imagem/tumb_7.png"
 							alt="Imagem de capa do card">
 						<div class="card-body">
 							<b>Água branca hotel</b>
@@ -247,7 +250,7 @@
 				</div>
 				<div class="col-md-4">
 					<div class="card mb-4 shadow-sm">
-						<img class="card-img-top" src="./resources/imagem/tumb_8.png"
+						<img class="card-img-top" src="./WebContent/resources/imagem/tumb_8.png"
 							alt="Imagem de capa do card">
 						<div class="card-body">
 							<b>Serra Negra hostel</b>
@@ -267,7 +270,7 @@
 				</div>
 				<div class="col-md-4">
 					<div class="card mb-4 shadow-sm">
-						<img class="card-img-top" src="./resources/imagem/tumb_9.png"
+						<img class="card-img-top" src="./WebContent/resources/imagem/tumb_9.png"
 							alt="Imagem de capa do card">
 						<div class="card-body">
 							<b>Fort mar hotel</b>
@@ -294,5 +297,6 @@
 	<nav class="navbar navbar-expand-sm navbar-dark bg-white">
 		<p class="text-center"></p>
 	</nav>
+
 </body>
 </html>

@@ -1,9 +1,10 @@
 <!doctype html>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <html>
 <head>
 <meta charset="UTF-8">
 <title>Poorbnb</title>
-<link rel="stylesheet" href="./resources/css/bootstrap.min.css">
+<link rel="stylesheet" href="./WebContent/resources/css/bootstrap.min.css">
 <link
 	href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
 	rel="stylesheet" id="bootstrap-css">
@@ -17,11 +18,11 @@
 </head>
 <style>
 </style>
-<body background="./resources/imagem/bg.png">
+<body background="./WebContent/resources/imagem/bg.png">
 	<!-- Navbar -->
 	<nav class="navbar navbar-expand-lg navbar-light bg-light  shadow">
 		<a class="navbar-brand" href="#"> <img
-			src="./resources/imagem/logo.png" width="200" height="50" alt="">
+			src="./WebContent/resources/imagem/logo.png" width="200" height="50" alt="">
 		</a>
 		<button class="navbar-toggler" type="button" data-toggle="collapse"
 			data-target="#conteudoNavbarSuportado"
@@ -63,10 +64,12 @@
 				<h4 class="card-title text-center mb-4 mt-1">Cadastrar</h4>
 				<hr>
 				<p class="text-success text-center">
-					<img src="./resources/imagem/logo-2.png" width="94" height="86"
+					<img src="./WebContent/resources/imagem/logo-2.png" width="94" height="86"
 						alt="" id="centro">
 				</p>
-				<form>
+			
+				
+				
 					<div class="form-group">
 						<div class="input-group">
 							<div class="input-group-prepend">
