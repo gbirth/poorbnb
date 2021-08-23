@@ -39,7 +39,7 @@ public class CobrancaHotelServiceImpl implements CobrancaHotelService {
         cobranca.setIdHotel(hotel.getIdHotel());
         cobranca.setHotel(hotel);
         cobranca.setMalAvaliado(HotelConstants.NAO);
-        cobranca.setValorDesconto(HotelConstants.DESCONTO);
+        cobranca.setValorDesconto(HotelConstants.TRINTA_E_CINCO_BIG_DECIMAL);
         return salvarCobranca(cobranca);
     }
 
@@ -79,7 +79,7 @@ public class CobrancaHotelServiceImpl implements CobrancaHotelService {
     @Override
     public Integer obterUltimoHistCobr(Optional<CobrancaHotel> cobrancaHotel) {
         final Integer histCobr = cobrancaHotel.isPresent() ? cobrancaHotel.get().getHistCobr() : HotelConstants.ZERO;
-        return histCobr + HotelConstants.ONE;
+        return histCobr + HotelConstants.UM;
     }
 
     @Override
@@ -94,7 +94,7 @@ public class CobrancaHotelServiceImpl implements CobrancaHotelService {
          copy.setHotel(cobHotel.getHotel());
         });
 
-        return cobrancaHotel.isPresent() ? copy : new CobrancaHotel(HotelConstants.ONE, HotelConstants.NAO);
+        return cobrancaHotel.isPresent() ? copy : new CobrancaHotel(HotelConstants.UM, HotelConstants.NAO);
     }
 
     @Override

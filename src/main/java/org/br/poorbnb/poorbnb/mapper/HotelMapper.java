@@ -6,8 +6,6 @@ import org.mapstruct.Mapper;
 
 @Mapper
 public interface HotelMapper {
-
     Hotel dtoToEntity(final HotelDTO hotel);
     HotelDTO entityToDTO(final Hotel hotel);
-
 }

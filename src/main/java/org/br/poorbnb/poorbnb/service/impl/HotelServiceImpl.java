@@ -2,10 +2,9 @@ package org.br.poorbnb.poorbnb.service.impl;
 
 import org.br.poorbnb.poorbnb.dto.HotelDTO;
 import org.br.poorbnb.poorbnb.event.AppEvent;
-import org.br.poorbnb.poorbnb.mapper.HotelMapper;
-import org.br.poorbnb.poorbnb.mapper.factory.MapperFactory;
+
 import org.br.poorbnb.poorbnb.pattern.strategy.UsuarioEnum;
-import org.br.poorbnb.poorbnb.pattern.command.Condition;
+import org.br.poorbnb.poorbnb.pattern.command.Condicao;
 import org.br.poorbnb.poorbnb.pattern.command.Handler;
 import org.br.poorbnb.poorbnb.constant.HotelConstants;
 import org.br.poorbnb.poorbnb.model.Hotel;
@@ -13,6 +12,7 @@ import org.br.poorbnb.poorbnb.repository.HotelRepository;
 import org.br.poorbnb.poorbnb.service.AvaliacaoHotelService;
 import org.br.poorbnb.poorbnb.service.CobrancaHotelService;
 import org.br.poorbnb.poorbnb.service.HotelService;
+import org.br.poorbnb.poorbnb.vo.HotelVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
@@ -27,40 +27,29 @@ public class HotelServiceImpl implements HotelService {
     private AvaliacaoHotelService avaliacaoHotelService;
     private CobrancaHotelService cobrancaHotelService;
     private ApplicationEventPublisher applicationEventPublisher;
-    private static HotelMapper hotelMapper;
-    private static Map<Condition, Handler> commands;
+    private static Map<Condicao, Handler> commands;
 
 
     @Autowired
     public HotelServiceImpl(HotelRepository repository,
                             AvaliacaoHotelService avaliacaoHotelService,
                             CobrancaHotelService cobrancaHotelService,
-                            ApplicationEventPublisher applicationEventPublisher,
-                            MapperFactory mapper) {
+                            ApplicationEventPublisher applicationEventPublisher) {
         this.hotelRepository = repository;
         this.avaliacaoHotelService = avaliacaoHotelService;
         this.cobrancaHotelService = cobrancaHotelService;
         this.applicationEventPublisher = applicationEventPublisher;
-        hotelMapper = mapper.getMapper(HotelMapper.class);
-        commands = this.getCommanderOfHotel();
+        commands = this.obterHotelCommander();
     }
 
     @Override
-    public Hotel inserirHotel(final HotelDTO hotel) {
-        final Hotel entidade = this.converterDTOEntidade(hotel);
+    public Hotel inserirHotel(final HotelVO hotel) {
+        final Hotel entidade = hotel.paraEntidade();
         return this.hotelRepository.save(entidade);
     }
 
-    public Hotel converterDTOEntidade(final HotelDTO hotel) {
-        return hotelMapper.dtoToEntity(hotel);
-    }
-
-//    public HotelDTO converterEntidadeDTO(final Hotel hotel) {
-//        return hotelMapper.entityToDTO(hotel);
-//    }
-
     @Override
-    public void publicarEvento(Hotel hotel) {
+    public void publicarEventoHotelInserido(Hotel hotel) {
         this.applicationEventPublisher.publishEvent(new AppEvent(hotel));
     }
 
@@ -72,79 +61,79 @@ public class HotelServiceImpl implements HotelService {
 
     @Override
     public Map<Hotel, Double> obterAvaliacoes() {
-        final List<Hotel> hoteis = this.obterHoteis();
+        final List<Hotel> hoteis = this.obterTodosHoteis();
 
         return hoteis
                 .stream()
                 .map(hotel -> {
-                    final Double rate = UsuarioEnum.HOTEL.calcularAvaliacao(hotel, this.avaliacaoHotelService);
-                    return Map.of(hotel, rate);
+                    final Double mediaAvaliacao = UsuarioEnum.HOTEL.calcularAvaliacao(hotel, this.avaliacaoHotelService);
+                    return Map.of(hotel, mediaAvaliacao);
                 })
-                .flatMap(hotelDoubleMap ->
-                        hotelDoubleMap
+                .flatMap(hotelMapStream ->
+                        hotelMapStream
                         .entrySet()
                         .stream())
                 .collect(
                         Collectors
                                 .toMap(Map.Entry::getKey,
                                        Map.Entry::getValue,
-                                       (original, repeated) -> (original * repeated) / 2));
+                                       (original, repetido) -> (original * repetido) / 2));
     }
 
     @Override
-    public List<Hotel> reverPrivilegiosHoteis(final Map<Hotel, Double> hoteis) {
-        return hoteis.entrySet()
+    public List<HotelDTO> reverPrivilegiosHoteis(final Map<Hotel, Double> avaliacoesHoteis) {
+        return avaliacoesHoteis.entrySet()
                 .stream()
-                .reduce(Collections.emptyList(), (hotels, hotel) -> {
-                    final Hotel _hotel = hotel.getKey();
-                    final Double avaliacao = hotel.getValue();
+                .reduce(Collections.emptyList(), (hoteisRevistos, hotelAtual) -> {
+                    final Hotel hotel = hotelAtual.getKey();
+                    final Double avaliacao = hotelAtual.getValue();
 
-                    final Handler handler = findCondtion(commands, avaliacao);
+                    final Handler handler = encontrarHandler(commands, avaliacao);
+                    handler.executar(hotel);
 
-                    handler.act(_hotel);
+                    final HotelDTO build = HotelDTO.builder()
+                            .nomeHotel(hotel.getNomeHotel())
+                            .mediaAvaliacao(avaliacao)
+                            .build();
 
-                    if (avaliacao >= HotelConstants.THREE && avaliacao < HotelConstants.FOUR_AND_HALF) {
-                        hotels.add(_hotel);
-                    }
-                    return hotels;
-        }, (hotels, hotels2) -> {
-                    hotels.addAll(hotels2);
-                    return hotels;
+                    hoteisRevistos.add(build);
+                    return hoteisRevistos;
+        }, (hoteis, hoteisRepetidos) -> {
+                    hoteis.addAll(hoteisRepetidos);
+                    return hoteis;
                 });
 
     }
 
     @Override
-    public List<Hotel> obterHoteis() {
+    public List<Hotel> obterTodosHoteis() {
         return this.hotelRepository.findAll();
     }
 
     @Override
-    public List<HotelDTO> obterHoteisSimilaresPorNome(String nomeHotel) {
-        final List<Hotel> hotels = this.hotelRepository.obterHoteisSimilaresPorNome(nomeHotel);
-        return hotels.stream()
-                .map(hotel -> hotelMapper.entityToDTO(hotel))
-                .collect(Collectors.toList());
+    public List<Hotel> obterHoteisSimilaresPorNome(String nomeHotel) {
+        return this.hotelRepository.obterHoteisSimilaresPorNome(nomeHotel);
     }
 
-    private Handler findCondtion(final Map<Condition, Handler> commanderOfHotel, final Double rateAverage) {
-        final Optional<Condition> first = commanderOfHotel.keySet()
+    private Handler encontrarHandler(final Map<Condicao, Handler> commander, final Double mediaAvaliacao) {
+        final Optional<Condicao> handler = commander.keySet()
                 .stream()
-                .filter(any -> any.conditionChecker(rateAverage))
+                .filter(chave -> chave.validadorCondicao(mediaAvaliacao))
                 .findFirst();
 
-        return commanderOfHotel.get(first.get());
+        return commander.get(handler.get());
     }
 
-    public Map<Condition, Handler> getCommanderOfHotel() {
+    private Map<Condicao, Handler> obterHotelCommander() {
         return Map.ofEntries(
-                new AbstractMap.SimpleEntry<Condition, Handler>((r) -> r >= HotelConstants.FOUR_AND_HALF,
+                new AbstractMap.SimpleEntry<Condicao, Handler>((r) -> r >= HotelConstants.QUATRO_E_MEIO,
                         (h) -> cobrancaHotelService.conceberDesconto(h)),
-                new AbstractMap.SimpleEntry<Condition, Handler>((r) -> r >= HotelConstants.THREE && r < HotelConstants.FOUR_AND_HALF,
+                new AbstractMap.SimpleEntry<Condicao, Handler>((r) -> r >= HotelConstants.TRES && r < HotelConstants.QUATRO_E_MEIO,
                         (h) -> cobrancaHotelService.manterEstavelOuRemoverRestricao(h)),
-                new AbstractMap.SimpleEntry<Condition, Handler>((r) -> r >= HotelConstants.ONE && r < HotelConstants.THREE,
+                new AbstractMap.SimpleEntry<Condicao, Handler>((r) -> r >= HotelConstants.UM && r < HotelConstants.TRES,
                         (h) -> cobrancaHotelService.aplicarRestricaoPesquisa(h)),
-                new AbstractMap.SimpleEntry<Condition, Handler>((r) -> r < HotelConstants.ONE, (h) -> removerHotel(h))
+                new AbstractMap.SimpleEntry<Condicao, Handler>((r) -> r < HotelConstants.UM, (h) -> removerHotel(h))
         );
     }
+
 }

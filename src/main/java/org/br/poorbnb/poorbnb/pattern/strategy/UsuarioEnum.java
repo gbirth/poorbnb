@@ -3,6 +3,7 @@ package org.br.poorbnb.poorbnb.pattern.strategy;
 import org.br.poorbnb.poorbnb.model.AvaliacaoHotel;
 import org.br.poorbnb.poorbnb.model.Hotel;
 
+import org.br.poorbnb.poorbnb.service.AvaliacaoHotelService;
 import org.br.poorbnb.poorbnb.service.impl.AvaliacaoHotelServiceImpl;
 
 
@@ -10,9 +11,6 @@ import java.util.List;
 
 
 public enum UsuarioEnum implements AvaliacaoStrategy {
-    /* Pattern para consultar a avaliacao; caso nao faça sentido removerei, mas é outro que depende
-        de tabelas e serviços
-     */
 
     USUARIO_COMUM {
         @Override
@@ -23,16 +21,20 @@ public enum UsuarioEnum implements AvaliacaoStrategy {
     HOTEL {
         @Override
         public Double calcularAvaliacao(Object user, Object getAvaliacao) {
-            Double value = null;
+            Double value = 0.0d;
 
             if (user instanceof Hotel && getAvaliacao instanceof AvaliacaoHotelServiceImpl) {
-                Hotel hotel = (Hotel) user;
-                AvaliacaoHotelServiceImpl obterAvaliacao = (AvaliacaoHotelServiceImpl) getAvaliacao;
-                final List<AvaliacaoHotel> avaliacaoHotels = obterAvaliacao.
+                final Hotel hotel = (Hotel) user;
+                final AvaliacaoHotelService avaliacaoService = (AvaliacaoHotelServiceImpl) getAvaliacao;
+
+                final List<AvaliacaoHotel> avaliacaoHotels = avaliacaoService.
                         listarAvaliacoesHotel(hotel.getIdHotel());
+
                 value = avaliacaoHotels
                         .parallelStream()
-                        .reduce(0.0, (acc, curr) -> acc + curr.getNotaHotel(), Double::sum);
+                        .reduce(0.0,
+                                (acc, curr) -> acc + curr.getNotaHotel(),
+                                Double::sum);
 
             }
             return value;

@@ -1,18 +1,23 @@
 package org.br.poorbnb.poorbnb.model;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.br.poorbnb.poorbnb.vo.QuartoVO;
 
 import java.io.Serializable;
 import javax.persistence.*;
 import java.math.BigDecimal;
+import java.util.Objects;
 
 
 /**
  * The persistent class for the QUARTO database table.
  * 
  */
+
 @Entity
 @Data
+@NoArgsConstructor
 @Table(name = "QUARTO")
 public class Quarto implements Serializable {
 	private static final long serialVersionUID = 1L;
@@ -39,4 +44,13 @@ public class Quarto implements Serializable {
 	@JoinColumn(name="ID_HOTEL")
 	private Hotel hotel;
 
+	public Quarto(final QuartoVO valueObject, final Quarto entidade) {
+		this.descricao = retrieveNonNullValue(entidade.getDescricao(), valueObject.getDescricao());
+		this.ocupadoSN = retrieveNonNullValue(entidade.getOcupadoSN(), valueObject.getOcupadoSN());
+		this.preco = retrieveNonNullValue(entidade.getPreco(), valueObject.getPreco());
+	}
+
+	private <T> T retrieveNonNullValue(T one, T two) {
+		return Objects.isNull(two) ? one: two;
+	}
 }

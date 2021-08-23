@@ -10,6 +10,8 @@ import javax.validation.constraints.NotEmpty;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.br.poorbnb.poorbnb.vo.HotelVO;
 
 
 /**
@@ -18,6 +20,7 @@ import lombok.Data;
  */
 @Entity
 @Data
+@NoArgsConstructor
 @Table(name = "HOTEL")
 public class Hotel implements Serializable {
 	
@@ -71,4 +74,13 @@ public class Hotel implements Serializable {
 	@JsonIgnore
 	@OneToOne(mappedBy = "hotel", fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
 	private CobrancaHotel cobrancaHotel;
+
+	public Hotel(final HotelVO valueObject) {
+		this.nomeHotel 		= valueObject.getNomeHotel();
+		this.usuario 		= valueObject.getIdUsuario();
+		this.telefone 		= valueObject.getTelefone();
+		this.telefoneOpc 	= valueObject.getTelefoneOpcional();
+		this.endereco 		= valueObject.getEndereco();
+		this.desativadoSN 	= valueObject.getDesativadoSN();
+	}
 }
