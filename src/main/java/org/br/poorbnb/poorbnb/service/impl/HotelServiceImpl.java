@@ -3,9 +3,9 @@ package org.br.poorbnb.poorbnb.service.impl;
 import org.br.poorbnb.poorbnb.dto.HotelDTO;
 import org.br.poorbnb.poorbnb.event.AppEvent;
 
-import org.br.poorbnb.poorbnb.pattern.strategy.UsuarioEnum;
-import org.br.poorbnb.poorbnb.pattern.command.Condicao;
-import org.br.poorbnb.poorbnb.pattern.command.Handler;
+import org.br.poorbnb.poorbnb.strategy.UsuarioEnum;
+import org.br.poorbnb.poorbnb.command.Condicao;
+import org.br.poorbnb.poorbnb.command.Handler;
 import org.br.poorbnb.poorbnb.constant.HotelConstants;
 import org.br.poorbnb.poorbnb.model.Hotel;
 import org.br.poorbnb.poorbnb.repository.HotelRepository;

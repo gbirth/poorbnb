@@ -1,4 +1,4 @@
-package org.br.poorbnb.poorbnb.pattern.strategy;
+package org.br.poorbnb.poorbnb.strategy;
 
 import org.br.poorbnb.poorbnb.model.AvaliacaoHotel;
 import org.br.poorbnb.poorbnb.model.Hotel;

@@ -1,4 +1,4 @@
-package org.br.poorbnb.poorbnb.pattern.command;
+package org.br.poorbnb.poorbnb.command;
 
 import org.br.poorbnb.poorbnb.model.Hotel;
 
