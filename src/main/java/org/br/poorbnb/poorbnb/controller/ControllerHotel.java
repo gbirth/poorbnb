@@ -1,5 +1,6 @@
 package org.br.poorbnb.poorbnb.controller;
 
+import org.br.poorbnb.poorbnb.dto.AvaliacaoHotelDTO;
 import org.br.poorbnb.poorbnb.dto.HotelDTO;
 import org.br.poorbnb.poorbnb.model.Hotel;
 import org.br.poorbnb.poorbnb.service.HotelService;
@@ -10,10 +11,9 @@ import org.springframework.web.bind.annotation.*;
 import javax.management.AttributeNotFoundException;
 import javax.validation.Valid;
 import java.util.List;
-import java.util.Map;
 
 @RestController
-@RequestMapping("api/v1/hotel")
+@RequestMapping("/api/v1/hotel")
 public class ControllerHotel {
 
     private HotelService hotelService;
@@ -32,10 +32,11 @@ public class ControllerHotel {
         return ResponseEntity.ok(hotel);
     }
 
-    @PutMapping("/must-pay-more-or-less")
+    @PutMapping
     public ResponseEntity<List<HotelDTO>> verificarAvaliacoes() {
-        final Map<Hotel, Double> hoteis = this.hotelService.obterAvaliacoes();
-        final List<HotelDTO> hoteisRevistos = this.hotelService.reverPrivilegiosHoteis(hoteis);
+        final List<AvaliacaoHotelDTO> avaliacoesHotel = this.hotelService.obterAvaliacoes();
+        final List<HotelDTO> hoteisRevistos = this.hotelService.reverPrivilegiosHoteis(avaliacoesHotel);
+
         return ResponseEntity.ok(hoteisRevistos);
     }
 

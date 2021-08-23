@@ -11,7 +11,7 @@ import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
+import java.util.Objects;
 
 @Service
 public class CobrancaHotelServiceImpl implements CobrancaHotelService {
@@ -23,18 +23,20 @@ public class CobrancaHotelServiceImpl implements CobrancaHotelService {
         this.cobrancaHotelRepository = cobrancaHotelRepository;
     }
 
-    @Override
-    public Optional<CobrancaHotel> obterUltimaCobrancaHotel(Long id) {
-        final Optional<List<CobrancaHotel>> cobrancaHotels = this.cobrancaHotelRepository.obterUltimaCobrancaHotel(id);
+    @EventListener({AppEvent.class})
+    public void handleHotelInserido(AppEvent appEvent) {
+        final Hotel source = (Hotel) appEvent.getSource();
+        final CobrancaHotel cobrancaHotel = criarCobranca();
 
-        return cobrancaHotels.isPresent() ? Optional.of(cobrancaHotels.get().get(0)) :
-                Optional.ofNullable(null);
+        cobrancaHotel.setIdHotel(source.getIdHotel());
+        cobrancaHotel.setValorDesconto(null);
+        salvarCobranca(cobrancaHotel);
     }
 
     @Override
     public CobrancaHotel conceberDesconto(Hotel hotel) {
-        final Optional<CobrancaHotel> cobrancaHotel = obterUltimaCobrancaHotel(hotel.getIdHotel());
-        final CobrancaHotel cobranca = criarCobranca(cobrancaHotel);
+        final CobrancaHotel cobrancaHotel = obterUltimaCobrancaHotel(hotel.getIdHotel());
+        final CobrancaHotel cobranca = atualizarCobranca(cobrancaHotel);
 
         cobranca.setIdHotel(hotel.getIdHotel());
         cobranca.setHotel(hotel);
@@ -45,8 +47,8 @@ public class CobrancaHotelServiceImpl implements CobrancaHotelService {
 
     @Override
     public CobrancaHotel aplicarRestricaoPesquisa(Hotel hotel) {
-        final Optional<CobrancaHotel> cobrancaHotel = obterUltimaCobrancaHotel(hotel.getIdHotel());
-        final CobrancaHotel cobranca = criarCobranca(cobrancaHotel);
+        final CobrancaHotel cobrancaHotel = obterUltimaCobrancaHotel(hotel.getIdHotel());
+        final CobrancaHotel cobranca = atualizarCobranca(cobrancaHotel);
 
         cobranca.setIdHotel(hotel.getIdHotel());
         cobranca.setHotel(hotel);
@@ -55,20 +57,10 @@ public class CobrancaHotelServiceImpl implements CobrancaHotelService {
         return salvarCobranca(cobranca);
     }
 
-    @EventListener({AppEvent.class})
-    public void handleHotelInserido(AppEvent appEvent) {
-        final Hotel source = (Hotel) appEvent.getSource();
-        final CobrancaHotel cobrancaHotel = criarCobranca(Optional.ofNullable(null));
-
-        cobrancaHotel.setIdHotel(source.getIdHotel());
-        cobrancaHotel.setValorDesconto(null);
-        salvarCobranca(cobrancaHotel);
-    }
-
     @Override
     public CobrancaHotel manterEstavelOuRemoverRestricao(Hotel hotel) {
-        final Optional<CobrancaHotel> cobrancaHotel = obterUltimaCobrancaHotel(hotel.getIdHotel());
-        final CobrancaHotel cobranca = criarCobranca(cobrancaHotel);
+        final CobrancaHotel cobrancaHotel = obterUltimaCobrancaHotel(hotel.getIdHotel());
+        final CobrancaHotel cobranca = atualizarCobranca(cobrancaHotel);
 
         cobranca.setIdHotel(hotel.getIdHotel());
         cobranca.setHotel(hotel);
@@ -77,29 +69,30 @@ public class CobrancaHotelServiceImpl implements CobrancaHotelService {
     }
 
     @Override
-    public Integer obterUltimoHistCobr(Optional<CobrancaHotel> cobrancaHotel) {
-        final Integer histCobr = cobrancaHotel.isPresent() ? cobrancaHotel.get().getHistCobr() : HotelConstants.ZERO;
-        return histCobr + HotelConstants.UM;
+    public Integer obterUltimoHistCobr(Integer historicoCobranca) {
+        final Integer histCobrancaAtualizado = Objects.nonNull(historicoCobranca) ? historicoCobranca : HotelConstants.ZERO;
+        return histCobrancaAtualizado + HotelConstants.UM;
     }
 
     @Override
-    public CobrancaHotel criarCobranca(Optional<CobrancaHotel> cobrancaHotel) { ;
-        final CobrancaHotel copy = new CobrancaHotel();
+    public CobrancaHotel criarCobranca() {
+        return new CobrancaHotel(HotelConstants.UM, HotelConstants.NAO);
+    }
 
-        cobrancaHotel.ifPresent(cobHotel -> {
-         copy.setHistCobr(obterUltimoHistCobr(cobrancaHotel));
-         copy.setMalAvaliado(cobHotel.getMalAvaliado());
-         copy.setIdHotel(cobHotel.getIdHotel());
-         copy.setValorDesconto(cobHotel.getValorDesconto());
-         copy.setHotel(cobHotel.getHotel());
-        });
+    @Override
+    public CobrancaHotel obterUltimaCobrancaHotel(Long id) {
+        final List<CobrancaHotel> cobrancaHotels = this.cobrancaHotelRepository.obterUltimaCobrancaHotel(id);
+        return cobrancaHotels.stream().findFirst().orElse(null);
+    }
 
-        return cobrancaHotel.isPresent() ? copy : new CobrancaHotel(HotelConstants.UM, HotelConstants.NAO);
+    @Override
+    public CobrancaHotel atualizarCobranca(CobrancaHotel cobrancaHotel) {
+        final Integer histCobranca = obterUltimoHistCobr(cobrancaHotel.getHistCobr());
+        return new CobrancaHotel(histCobranca, cobrancaHotel);
     }
 
     @Override
     public CobrancaHotel salvarCobranca(CobrancaHotel cobrancaHotel) {
         return this.cobrancaHotelRepository.save(cobrancaHotel);
     }
-
 }

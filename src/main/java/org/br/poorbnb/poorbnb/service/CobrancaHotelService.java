@@ -7,7 +7,7 @@ import java.util.Optional;
 
 public interface CobrancaHotelService {
 
-    Optional<CobrancaHotel> obterUltimaCobrancaHotel(Long id);
+    CobrancaHotel obterUltimaCobrancaHotel(Long id);
 
     CobrancaHotel conceberDesconto(Hotel hotel);
 
@@ -15,9 +15,11 @@ public interface CobrancaHotelService {
 
     CobrancaHotel manterEstavelOuRemoverRestricao(Hotel hotel);
 
-    Integer obterUltimoHistCobr(Optional<CobrancaHotel> cobrancaHotel);
+    Integer obterUltimoHistCobr(Integer historicoCobranca);
 
-    CobrancaHotel criarCobranca(Optional<CobrancaHotel> cobrancaHotel);
+    CobrancaHotel criarCobranca();
 
     CobrancaHotel salvarCobranca(CobrancaHotel cobrancaHotel);
+
+    CobrancaHotel atualizarCobranca(CobrancaHotel cobrancaHotel);
 }

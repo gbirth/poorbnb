@@ -17,5 +17,5 @@ public interface CobrancaHotelRepository extends JpaRepository<CobrancaHotel, Lo
             + "       inner join ch.hotel as hot"
             + "       where ch.idHotel = :id    "
             + "       order by ch.histCobr desc ")
-    Optional<List<CobrancaHotel>> obterUltimaCobrancaHotel(@Param("id") Long id);
+    List<CobrancaHotel> obterUltimaCobrancaHotel(@Param("id") Long id);
 }

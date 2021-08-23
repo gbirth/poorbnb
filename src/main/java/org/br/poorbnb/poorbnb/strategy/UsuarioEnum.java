@@ -27,10 +27,9 @@ public enum UsuarioEnum implements AvaliacaoStrategy {
                 final Hotel hotel = (Hotel) user;
                 final AvaliacaoHotelService avaliacaoService = (AvaliacaoHotelServiceImpl) getAvaliacao;
 
-                final List<AvaliacaoHotel> avaliacaoHotels = avaliacaoService.
-                        listarAvaliacoesHotel(hotel.getIdHotel());
+                final List<AvaliacaoHotel> avaliacaoHoteis = avaliacaoService.listarAvaliacoesHotel(hotel.getIdHotel());
 
-                value = avaliacaoHotels
+                value = avaliacaoHoteis
                         .parallelStream()
                         .reduce(0.0,
                                 (acc, curr) -> acc + curr.getNotaHotel(),
