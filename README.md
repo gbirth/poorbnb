@@ -1,10 +1,10 @@
 # POORBNB
 
-****
 <div align="center">
   <img src="src/main/resources/assets/fatec_logo.png" alt="Fatec Logo"/>
 </div>
 
+***
 
 Projeto criado para a matéria de Laboratório de Engenharia de Software
 
