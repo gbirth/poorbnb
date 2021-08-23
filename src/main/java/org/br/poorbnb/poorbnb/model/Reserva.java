@@ -43,5 +43,4 @@ public class Reserva implements Serializable {
 	@JoinColumn(name="ID_USUARIO")
 	private Usuario usuario;
 
-
 }

@@ -21,5 +21,5 @@ public interface HotelRepository extends JpaRepository<Hotel, Long> {
             + "     and (:nomeHotel is null or       "
             + "     hot.nomeHotel like :nomeHotel%)"
             + "     order by ch.malAvaliado ")
-    List<Hotel> listarHoteis(@Param("nomeHotel") String nomeHotel);
+    List<Hotel> obterHoteisSimilaresPorNome(@Param("nomeHotel") String nomeHotel);
 }

@@ -1,16 +1,14 @@
 package org.br.poorbnb.poorbnb.service;
 
+import org.br.poorbnb.poorbnb.dto.QuartoDTO;
 import org.br.poorbnb.poorbnb.exception.ResourceNotFoundException;
 import org.br.poorbnb.poorbnb.model.Quarto;
 
+import javax.management.AttributeNotFoundException;
+
 public interface QuartoService {
-	public Quarto obterQuartoPorId(Long quartoId) 	throws ResourceNotFoundException ;		
 
-	public Quarto criarQuarto(Quarto quarto) ;
-
-	
-	public Quarto atualizaQuarto(Long quartoId, Quarto quartoDetails) throws ResourceNotFoundException ;
-
-	  
-
+	Quarto obterQuartoPorId(Long quartoId) throws ResourceNotFoundException;
+	Quarto salvarQuarto(Quarto quarto);
+	Quarto atualizaQuarto(Long quartoId, QuartoDTO quartoAlteracoes) throws ResourceNotFoundException, AttributeNotFoundException;
 }

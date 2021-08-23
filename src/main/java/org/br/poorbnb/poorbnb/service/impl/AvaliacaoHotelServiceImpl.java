@@ -1,5 +1,6 @@
 package org.br.poorbnb.poorbnb.service.impl;
 
+import org.br.poorbnb.poorbnb.dto.AvaliacaoHotelDTO;
 import org.br.poorbnb.poorbnb.model.AvaliacaoHotel;
 import org.br.poorbnb.poorbnb.repository.AvaliacaoHotelRepository;
 import org.br.poorbnb.poorbnb.service.AvaliacaoHotelService;
@@ -19,7 +20,8 @@ public class AvaliacaoHotelServiceImpl implements AvaliacaoHotelService {
     }
 
     @Override
-    public AvaliacaoHotel regristrarAvaliacaoHotel(AvaliacaoHotel avaliacaoHotel) {
+    public AvaliacaoHotel regristrarAvaliacaoHotel(final AvaliacaoHotelDTO avaliacaoHotelDTO) {
+        final AvaliacaoHotel avaliacaoHotel = avaliacaoHotelDTO.paraEntidade();
         return this.avaliacaoHotelRepository.save(avaliacaoHotel);
     }
 

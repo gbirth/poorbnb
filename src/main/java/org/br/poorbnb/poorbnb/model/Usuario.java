@@ -66,4 +66,9 @@ public class Usuario implements Serializable {
 
 	@OneToOne(mappedBy = "usuario")
 	private CobrancaUsuario cobrancaUsuario;
+
+
+	public Usuario(Long idUsuario) {
+		this.idUsuario = idUsuario;
+	}
 }
