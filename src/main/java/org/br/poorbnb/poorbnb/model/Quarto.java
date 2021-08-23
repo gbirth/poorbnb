@@ -45,12 +45,12 @@ public class Quarto implements Serializable {
 	private Hotel hotel;
 
 	public Quarto(final QuartoVO valueObject, final Quarto entidade) {
-		this.descricao = retrieveNonNullValue(entidade.getDescricao(), valueObject.getDescricao());
-		this.ocupadoSN = retrieveNonNullValue(entidade.getOcupadoSN(), valueObject.getOcupadoSN());
-		this.preco = retrieveNonNullValue(entidade.getPreco(), valueObject.getPreco());
+		this.descricao = obterValorNaoNulo(entidade.getDescricao(), valueObject.getDescricao());
+		this.ocupadoSN = obterValorNaoNulo(entidade.getOcupadoSN(), valueObject.getOcupadoSN());
+		this.preco = obterValorNaoNulo(entidade.getPreco(), valueObject.getPreco());
 	}
 
-	private <T> T retrieveNonNullValue(T one, T two) {
+	private <T> T obterValorNaoNulo(T one, T two) {
 		return Objects.isNull(two) ? one: two;
 	}
 }
