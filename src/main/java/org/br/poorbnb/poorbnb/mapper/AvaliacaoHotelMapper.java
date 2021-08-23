@@ -10,17 +10,17 @@ import org.mapstruct.Mappings;
 public interface AvaliacaoHotelMapper {
 
     @Mappings({
-            @Mapping(source = "avaliacaoHotelDTO.idHotel", target = "id.idHotelAvaliado"),
+            @Mapping(source = "avaliacaoHotelDTO.hotel.idHotel", target = "id.idHotelAvaliado"),
             @Mapping(source = "avaliacaoHotelDTO.idUsuario", target = "id.idAvaliador"),
             @Mapping(source = "avaliacaoHotelDTO.idReserva", target = "idReserva"),
-            @Mapping(source = "avaliacaoHotelDTO.nota", target = "notaHotel")
+            @Mapping(source = "avaliacaoHotelDTO.avaliacao", target = "notaHotel")
     })
     AvaliacaoHotel dtoParaEntidade(final AvaliacaoHotelDTO avaliacaoHotelDTO);
     @Mappings({
-            @Mapping(target = "idHotel", source = "avaliacaoHotel.id.idHotelAvaliado"),
+            @Mapping(target = "hotel.idHotel", source = "avaliacaoHotel.id.idHotelAvaliado"),
             @Mapping(target = "idUsuario", source = "avaliacaoHotel.id.idAvaliador"),
             @Mapping(target = "idReserva", source = "avaliacaoHotel.idReserva"),
-            @Mapping(target = "nota", source = "avaliacaoHotel.notaHotel")
+            @Mapping(target = "avaliacao", source = "avaliacaoHotel.notaHotel")
     })
     AvaliacaoHotelDTO entidadeParaDTO(final AvaliacaoHotel avaliacaoHotel);
 }

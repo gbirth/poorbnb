@@ -40,7 +40,14 @@ public class CobrancaHotel implements Serializable {
 	}
 
 	public CobrancaHotel(final Integer histCobr, final String malAvaliado) {
+		this();
 		this.histCobr = histCobr;
 		this.malAvaliado = malAvaliado;
+	}
+	public CobrancaHotel(Integer histCobr, CobrancaHotel cobrancaHotel) {
+		this(histCobr, cobrancaHotel.getMalAvaliado());
+		this.idHotel = cobrancaHotel.getIdHotel();
+		this.valorDesconto = cobrancaHotel.getValorDesconto();
+		this.hotel = cobrancaHotel.getHotel();
 	}
 }

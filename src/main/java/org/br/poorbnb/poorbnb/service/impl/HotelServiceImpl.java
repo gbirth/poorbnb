@@ -1,5 +1,6 @@
 package org.br.poorbnb.poorbnb.service.impl;
 
+import org.br.poorbnb.poorbnb.dto.AvaliacaoHotelDTO;
 import org.br.poorbnb.poorbnb.dto.HotelDTO;
 import org.br.poorbnb.poorbnb.event.AppEvent;
 
@@ -23,10 +24,10 @@ import java.util.stream.Collectors;
 @Service
 public class HotelServiceImpl implements HotelService {
 
-    private HotelRepository hotelRepository;
-    private AvaliacaoHotelService avaliacaoHotelService;
-    private CobrancaHotelService cobrancaHotelService;
-    private ApplicationEventPublisher applicationEventPublisher;
+    private final HotelRepository hotelRepository;
+    private final AvaliacaoHotelService avaliacaoHotelService;
+    private final CobrancaHotelService cobrancaHotelService;
+    private final ApplicationEventPublisher applicationEventPublisher;
     private static Map<Condicao, Handler> commands;
 
 
@@ -54,55 +55,32 @@ public class HotelServiceImpl implements HotelService {
     }
 
     @Override
-    public void removerHotel(Hotel hotel) {
-        hotel.setDesativadoSN(HotelConstants.SIM);
-        this.hotelRepository.saveAndFlush(hotel);
-    }
-
-    @Override
-    public Map<Hotel, Double> obterAvaliacoes() {
+    public List<AvaliacaoHotelDTO> obterAvaliacoes() {
         final List<Hotel> hoteis = this.obterTodosHoteis();
 
-        return hoteis
-                .stream()
+        return hoteis.stream()
                 .map(hotel -> {
                     final Double mediaAvaliacao = UsuarioEnum.HOTEL.calcularAvaliacao(hotel, this.avaliacaoHotelService);
-                    return Map.of(hotel, mediaAvaliacao);
-                })
-                .flatMap(hotelMapStream ->
-                        hotelMapStream
-                        .entrySet()
-                        .stream())
-                .collect(
-                        Collectors
-                                .toMap(Map.Entry::getKey,
-                                       Map.Entry::getValue,
-                                       (original, repetido) -> (original * repetido) / 2));
+                    return new AvaliacaoHotelDTO(hotel, mediaAvaliacao);
+                }).collect(Collectors.toList());
     }
 
     @Override
-    public List<HotelDTO> reverPrivilegiosHoteis(final Map<Hotel, Double> avaliacoesHoteis) {
-        return avaliacoesHoteis.entrySet()
+    public List<HotelDTO> reverPrivilegiosHoteis(final List<AvaliacaoHotelDTO> avaliacoesHoteis) {
+        return avaliacoesHoteis
                 .stream()
-                .reduce(Collections.emptyList(), (hoteisRevistos, hotelAtual) -> {
-                    final Hotel hotel = hotelAtual.getKey();
-                    final Double avaliacao = hotelAtual.getValue();
+                .map(avaliacaoHotelDTO -> {
+                    final Hotel hotel = avaliacaoHotelDTO.getHotel();
+                    final Double avaliacao = avaliacaoHotelDTO.getAvaliacao();
 
                     final Handler handler = encontrarHandler(commands, avaliacao);
                     handler.executar(hotel);
 
-                    final HotelDTO build = HotelDTO.builder()
+                    return HotelDTO.builder()
                             .nomeHotel(hotel.getNomeHotel())
                             .mediaAvaliacao(avaliacao)
                             .build();
-
-                    hoteisRevistos.add(build);
-                    return hoteisRevistos;
-        }, (hoteis, hoteisRepetidos) -> {
-                    hoteis.addAll(hoteisRepetidos);
-                    return hoteis;
-                });
-
+                }).collect(Collectors.toList());
     }
 
     @Override
@@ -116,24 +94,31 @@ public class HotelServiceImpl implements HotelService {
     }
 
     private Handler encontrarHandler(final Map<Condicao, Handler> commander, final Double mediaAvaliacao) {
-        final Optional<Condicao> handler = commander.keySet()
+        final Condicao handler = commander.keySet()
                 .stream()
                 .filter(chave -> chave.validadorCondicao(mediaAvaliacao))
-                .findFirst();
+                .findFirst()
+                .orElse(null);
 
-        return commander.get(handler.get());
+        return commander.get(handler);
     }
 
     private Map<Condicao, Handler> obterHotelCommander() {
         return Map.ofEntries(
                 new AbstractMap.SimpleEntry<Condicao, Handler>((r) -> r >= HotelConstants.QUATRO_E_MEIO,
-                        (h) -> cobrancaHotelService.conceberDesconto(h)),
+                        cobrancaHotelService::conceberDesconto),
                 new AbstractMap.SimpleEntry<Condicao, Handler>((r) -> r >= HotelConstants.TRES && r < HotelConstants.QUATRO_E_MEIO,
-                        (h) -> cobrancaHotelService.manterEstavelOuRemoverRestricao(h)),
+                        cobrancaHotelService::manterEstavelOuRemoverRestricao),
                 new AbstractMap.SimpleEntry<Condicao, Handler>((r) -> r >= HotelConstants.UM && r < HotelConstants.TRES,
-                        (h) -> cobrancaHotelService.aplicarRestricaoPesquisa(h)),
-                new AbstractMap.SimpleEntry<Condicao, Handler>((r) -> r < HotelConstants.UM, (h) -> removerHotel(h))
+                        cobrancaHotelService::aplicarRestricaoPesquisa),
+                new AbstractMap.SimpleEntry<Condicao, Handler>((r) -> r < HotelConstants.UM, this::removerHotel)
         );
+    }
+
+    @Override
+    public void removerHotel(Hotel hotel) {
+        hotel.setDesativadoSN(HotelConstants.SIM);
+        this.hotelRepository.saveAndFlush(hotel);
     }
 
 }

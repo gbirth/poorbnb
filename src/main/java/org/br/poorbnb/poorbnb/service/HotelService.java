@@ -1,11 +1,11 @@
 package org.br.poorbnb.poorbnb.service;
 
+import org.br.poorbnb.poorbnb.dto.AvaliacaoHotelDTO;
 import org.br.poorbnb.poorbnb.dto.HotelDTO;
 import org.br.poorbnb.poorbnb.model.Hotel;
 import org.br.poorbnb.poorbnb.vo.HotelVO;
 
 import java.util.List;
-import java.util.Map;
 
 
 public interface HotelService {
@@ -18,9 +18,9 @@ public interface HotelService {
 
     List<Hotel> obterTodosHoteis();
 
-    Map<Hotel, Double> obterAvaliacoes();
+    List<AvaliacaoHotelDTO> obterAvaliacoes();
 
-    List<HotelDTO> reverPrivilegiosHoteis(final Map<Hotel, Double> hotel);
+    List<HotelDTO> reverPrivilegiosHoteis(final List<AvaliacaoHotelDTO> avaliacoesHotel);
 
     List<Hotel> obterHoteisSimilaresPorNome(String nomeHotel);
 }
