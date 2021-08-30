@@ -7,7 +7,7 @@ public interface Condicao {
 
     boolean condicao(Double rate);
 
-    default boolean validadorCondicao(Double rate) {
+    default boolean validarCondicao(Double rate) {
         Objects.requireNonNull(rate);
         return condicao(rate);
     }

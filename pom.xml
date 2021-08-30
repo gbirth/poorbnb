@@ -19,6 +19,8 @@
 
 	<properties>
 		<java.version>11</java.version>
+		<lombok.version>1.18.16</lombok.version>
+		<map.struct.version>1.4.2.Final</map.struct.version>
 	</properties>
 
 	<dependencies>
@@ -71,14 +73,14 @@
 		<dependency>
 			<groupId>org.mapstruct</groupId>
 			<artifactId>mapstruct</artifactId>
-			<version>1.4.2.Final</version>
+			<version>${map.struct.version}</version>
 		</dependency>
 
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
 			<optional>true</optional>
-			<version>1.18.16</version>
+			<version>${lombok.version}</version>
 		</dependency>
 
 		<dependency>
@@ -124,7 +126,6 @@
 					</annotationProcessorPaths>
 				</configuration>
 			</plugin>
-
 
 			<plugin>
 				<groupId>com.spotify</groupId>

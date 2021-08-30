@@ -96,7 +96,7 @@ public class HotelServiceImpl implements HotelService {
     private Handler encontrarHandler(final Map<Condicao, Handler> commander, final Double mediaAvaliacao) {
         final Condicao handler = commander.keySet()
                 .stream()
-                .filter(chave -> chave.validadorCondicao(mediaAvaliacao))
+                .filter(chave -> chave.validarCondicao(mediaAvaliacao))
                 .findFirst()
                 .orElse(null);
 
