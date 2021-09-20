@@ -1,17 +1,16 @@
 package org.br.poorbnb.poorbnb.service.impl;
 
+import org.br.poorbnb.poorbnb.command.HotelAvaliacaoFactory;
 import org.br.poorbnb.poorbnb.dto.AvaliacaoHotelDTO;
 import org.br.poorbnb.poorbnb.dto.HotelDTO;
 import org.br.poorbnb.poorbnb.event.AppEvent;
 
+import org.br.poorbnb.poorbnb.model.CobrancaHotel;
 import org.br.poorbnb.poorbnb.strategy.UsuarioEnum;
-import org.br.poorbnb.poorbnb.command.Condicao;
-import org.br.poorbnb.poorbnb.command.Handler;
 import org.br.poorbnb.poorbnb.constant.HotelConstants;
 import org.br.poorbnb.poorbnb.model.Hotel;
 import org.br.poorbnb.poorbnb.repository.HotelRepository;
 import org.br.poorbnb.poorbnb.service.AvaliacaoHotelService;
-import org.br.poorbnb.poorbnb.service.CobrancaHotelService;
 import org.br.poorbnb.poorbnb.service.HotelService;
 import org.br.poorbnb.poorbnb.vo.HotelVO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,21 +25,18 @@ public class HotelServiceImpl implements HotelService {
 
     private final HotelRepository hotelRepository;
     private final AvaliacaoHotelService avaliacaoHotelService;
-    private final CobrancaHotelService cobrancaHotelService;
+    private final HotelAvaliacaoFactory hotelAvaliacaoFactory;
     private final ApplicationEventPublisher applicationEventPublisher;
-    private static Map<Condicao, Handler> commands;
-
 
     @Autowired
     public HotelServiceImpl(HotelRepository repository,
                             AvaliacaoHotelService avaliacaoHotelService,
-                            CobrancaHotelService cobrancaHotelService,
+                            HotelAvaliacaoFactory hotelAvaliacaoFactory,
                             ApplicationEventPublisher applicationEventPublisher) {
         this.hotelRepository = repository;
         this.avaliacaoHotelService = avaliacaoHotelService;
-        this.cobrancaHotelService = cobrancaHotelService;
+        this.hotelAvaliacaoFactory = hotelAvaliacaoFactory;
         this.applicationEventPublisher = applicationEventPublisher;
-        commands = this.obterHotelCommander();
     }
 
     @Override
@@ -73,8 +69,7 @@ public class HotelServiceImpl implements HotelService {
                     final Hotel hotel = avaliacaoHotelDTO.getHotel();
                     final Double avaliacao = avaliacaoHotelDTO.getAvaliacao();
 
-                    final Handler handler = encontrarHandler(commands, avaliacao);
-                    handler.executar(hotel);
+                    aplicarPoliticaAvaliacaoHotel(avaliacao, hotel);
 
                     return HotelDTO.builder()
                             .nomeHotel(hotel.getNomeHotel())
@@ -93,26 +88,13 @@ public class HotelServiceImpl implements HotelService {
         return this.hotelRepository.obterHoteisSimilaresPorNome(nomeHotel);
     }
 
-    private Handler encontrarHandler(final Map<Condicao, Handler> commander, final Double mediaAvaliacao) {
-        final Condicao handler = commander.keySet()
-                .stream()
-                .filter(chave -> chave.validarCondicao(mediaAvaliacao))
-                .findFirst()
-                .orElse(null);
-
-        return commander.get(handler);
-    }
-
-    private Map<Condicao, Handler> obterHotelCommander() {
-        return Map.ofEntries(
-                new AbstractMap.SimpleEntry<Condicao, Handler>((r) -> r >= HotelConstants.QUATRO_E_MEIO,
-                        cobrancaHotelService::conceberDesconto),
-                new AbstractMap.SimpleEntry<Condicao, Handler>((r) -> r >= HotelConstants.TRES && r < HotelConstants.QUATRO_E_MEIO,
-                        cobrancaHotelService::manterEstavelOuRemoverRestricao),
-                new AbstractMap.SimpleEntry<Condicao, Handler>((r) -> r >= HotelConstants.UM && r < HotelConstants.TRES,
-                        cobrancaHotelService::aplicarRestricaoPesquisa),
-                new AbstractMap.SimpleEntry<Condicao, Handler>((r) -> r < HotelConstants.UM, this::removerHotel)
-        );
+    private CobrancaHotel aplicarPoliticaAvaliacaoHotel(final Double avaliacao, final Hotel hotel) {
+        if (avaliacao < HotelConstants.UM) {
+            this.removerHotel(hotel);
+            return new CobrancaHotel();
+        } else {
+            return this.hotelAvaliacaoFactory.aplicaPoliticaAvaliacao(avaliacao, hotel);
+        }
     }
 
     @Override
